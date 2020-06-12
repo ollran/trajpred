@@ -2,6 +2,10 @@
 
 
 from hashlib import sha256
+from itertools import chain
+from os import listdir, mkdir
+from shutil import move, rmtree
+from zipfile import ZipFile
 
 from requests import get
 
@@ -31,6 +35,29 @@ def verify_dataset(dataset_archive_filename: str, dataset_hash_sha2: str) -> boo
         for chunk in iter(lambda: file_handle.read(4096), b''):
             hash_sha2.update(chunk)
         return hash_sha2.hexdigest() == dataset_hash_sha2
+
+
+def extract_dataset(dataset_archive_filename: str, dataset_directory: str) -> None:
+    """
+    Extracts the files from the ZIP archive
+    :param dataset_archive_filename: the filename of the ZIP archive
+    :param dataset_directory: the name of the directory where the dataset is extracted
+    :return: None
+    """
+    mkdir(dataset_directory)
+    tmp_directory = f'{dataset_directory}_tmp'
+    with ZipFile(dataset_archive_filename, mode='r') as file_handle:
+        ZipFile.extractall(file_handle, path=tmp_directory)
+    subdirectories = list(chain(*[
+        [f'{subdirectory}/{trajectory}' for trajectory in listdir(subdirectory)]
+        for subdirectory in [
+            f'{tmp_directory}/{directory}'
+            for directory in listdir(tmp_directory)
+        ]
+    ]))
+    for subdirectory in subdirectories:
+        move(subdirectory, dataset_directory)
+    rmtree(tmp_directory)
 
 
 def main():
