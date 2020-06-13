@@ -79,6 +79,7 @@ def main() -> None:
     dataset_url = config[DATASET][URL]
     dataset_hash_sha2 = config[DATASET][HASH_SHA2]
     dataset_directory = config[DATASET][DIRECTORY]
+    dataset_archive_filename = dataset_url.split('/')[-1]
 
 
 if __name__ == '__main__':
