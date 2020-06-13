@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 
+from configparser import ConfigParser
 from hashlib import sha256
 from itertools import chain
 from os import listdir, mkdir
@@ -8,6 +9,12 @@ from shutil import move, rmtree
 from zipfile import ZipFile
 
 from requests import get
+
+# Constants
+DATASET = 'DATASET'
+URL = 'URL'
+HASH_SHA2 = 'HASH_SHA2'
+DIRECTORY = 'DIRECTORY'
 
 
 def fetch_dataset(url: str, archive_filename: str) -> None:
@@ -60,8 +67,18 @@ def extract_dataset(dataset_archive_filename: str, dataset_directory: str) -> No
     rmtree(tmp_directory)
 
 
-def main():
-    pass
+def main() -> None:
+    """
+    Main preprocessor program
+    :return: None
+    """
+
+    # Parse configuration file
+    config = ConfigParser()
+    config.read('config.ini')
+    dataset_url = config[DATASET][URL]
+    dataset_hash_sha2 = config[DATASET][HASH_SHA2]
+    dataset_directory = config[DATASET][DIRECTORY]
 
 
 if __name__ == '__main__':
