@@ -5,7 +5,7 @@ from configparser import ConfigParser
 from hashlib import sha256
 from itertools import chain
 from os import listdir, mkdir
-from os.path import isfile
+from os.path import isdir, isfile
 from shutil import move, rmtree
 from timeit import default_timer
 from zipfile import ZipFile
@@ -106,14 +106,30 @@ def main() -> None:
     if hash_match:
         print(
             f'dataset matches the SHA2 checksum {dataset_archive_hash_sha2}\n'
-            f'dataset verification took {verification_end_time - verification_start_time} seconds'
+            f'dataset verification took {verification_end_time - verification_start_time} seconds\n'
         )
     else:
         print(
             f'CORRUPTED DATASET, ABORTING!\n'
-            f'dataset verification took {verification_end_time - verification_start_time} seconds'
+            f'dataset verification took {verification_end_time - verification_start_time} seconds\n'
         )
         return
+
+    # Extract the dataset
+    if isdir(dataset_directory):
+        print(f'{dataset_directory} already exists, removing the old dataset directory')
+        rmtree(dataset_directory)
+
+    print(
+        f'extracting the fetched dataset {dataset_archive_filename} into {dataset_directory}'
+    )
+    extract_start_time = default_timer()
+    extract_dataset(
+        dataset_archive_filename=dataset_archive_filename,
+        dataset_directory=dataset_directory
+    )
+    extract_end_time = default_timer()
+    print(f'extraction took {extract_end_time - extract_start_time} seconds\n')
 
 
 if __name__ == '__main__':
