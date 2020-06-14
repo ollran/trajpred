@@ -104,7 +104,6 @@ def main() -> None:
     )
     verification_end_time = default_timer()
     if hash_match:
-        verification_end_time = default_timer()
         print(
             f'dataset matches the SHA2 checksum {dataset_archive_hash_sha2}\n'
             f'dataset verification took {verification_end_time - verification_start_time} seconds'
