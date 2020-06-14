@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+"""
+Preprocessor script that downloads the dataset, verifies it and finally extracts it
+"""
 
 from configparser import ConfigParser
 from hashlib import sha256
