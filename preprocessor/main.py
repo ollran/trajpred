@@ -5,7 +5,9 @@ from configparser import ConfigParser
 from hashlib import sha256
 from itertools import chain
 from os import listdir, mkdir
+from os.path import isfile
 from shutil import move, rmtree
+from timeit import default_timer
 from zipfile import ZipFile
 
 from requests import get
@@ -80,6 +82,39 @@ def main() -> None:
     dataset_archive_filename = dataset_url.split('/')[-1]
     dataset_archive_hash_sha2 = config[DATASET][HASH_SHA2]
     dataset_directory = config[DATASET][DIRECTORY]
+
+    # Fetch dataset from the server if it does not exist already
+    if isfile(dataset_archive_filename):
+        print(f'{dataset_archive_filename} already exists\n')
+    else:
+        print(f'fetching the dataset from {dataset_url}')
+        fetch_start_time = default_timer()
+        fetch_dataset(
+            url=dataset_url,
+            dataset_archive_filename=dataset_archive_filename
+        )
+        fetch_end_time = default_timer()
+        print(f'fetching took {fetch_end_time - fetch_start_time} seconds\n')
+
+    # Verify the dataset
+    verification_start_time = default_timer()
+    hash_match = verify_dataset(
+        dataset_archive_filename=dataset_archive_filename,
+        dataset_archive_hash_sha2=dataset_archive_hash_sha2
+    )
+    verification_end_time = default_timer()
+    if hash_match:
+        verification_end_time = default_timer()
+        print(
+            f'dataset matches the SHA2 checksum {dataset_archive_hash_sha2}\n'
+            f'dataset verification took {verification_end_time - verification_start_time} seconds'
+        )
+    else:
+        print(
+            f'CORRUPTED DATASET, ABORTING!\n'
+            f'dataset verification took {verification_end_time - verification_start_time} seconds'
+        )
+        return
 
 
 if __name__ == '__main__':
