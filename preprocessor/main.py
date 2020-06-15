@@ -7,7 +7,7 @@ Preprocessor script that downloads the dataset, verifies it and finally extracts
 from configparser import ConfigParser
 from hashlib import sha256
 from itertools import chain
-from os import listdir, mkdir
+from os import listdir, mkdir, remove
 from os.path import isdir, isfile
 from shutil import move, rmtree
 from timeit import default_timer
@@ -133,6 +133,10 @@ def main() -> None:
     )
     extract_end_time = default_timer()
     print(f'extraction took {extract_end_time - extract_start_time} seconds\n')
+
+    # Remove the ZIP archive
+    print(f'removing {dataset_archive_filename}')
+    remove(dataset_archive_filename)
 
 
 if __name__ == '__main__':
