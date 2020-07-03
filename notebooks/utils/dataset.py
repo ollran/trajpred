@@ -38,3 +38,14 @@ def load_users_trajectories(user_id: int) -> List[ndarray]:
         [loadtxt(f'{dirpath}/{f}') for f in filenames]
         for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
     ]))
+
+
+def load_all_trajectories() -> List[ndarray]:
+    """
+    Loads all trajectories and returns them as a list of numpy arrays
+    :return: List of trajectories
+    """
+    return list(chain(*[
+        [loadtxt(f'{dirpath}/{f}') for f in filenames]
+        for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}')
+    ]))
