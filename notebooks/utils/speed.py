@@ -20,7 +20,9 @@ def calculate_speed_in_ms(start: ndarray, end: ndarray) -> float:
 
     [_, _, ts_start, _] = start
     [_, _, ts_end, _] = end
-    return calculate_distance_in_meters(
+    time = (ts_end - ts_start) / 1000  # ms -> s
+
+    return (calculate_distance_in_meters(
         start=start,
         end=end
-    ) / ((ts_end - ts_start) / 1000)  # ms -> s
+    ) / time) if time > 0 else 0
