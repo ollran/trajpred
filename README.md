@@ -6,6 +6,9 @@
 # trajpred
 Trajectory predictions implemented in python
 
+## Dataset
+The dataset that is used is [Mopsi Routes 2019 dataset](http://cs.uef.fi/mopsi/routes/2019/). It contains 2,484 routes recorded by 10 users performing various activities such as walking, cycling, hiking, jogging, orienteering, skiing, driving, traveling by bus, train or boat.
+
 ## Methods
 Every method works by first splitting the trajectory into two parts and then using the head part as the learning resource and the tail as the *ground truth*.
 
