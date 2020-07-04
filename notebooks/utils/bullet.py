@@ -58,9 +58,9 @@ def bullet_prediction(start: ndarray, end: ndarray, time: float) -> ndarray:
         end=end
     )
     prediction_distance = time * speed
-    number_of_coordinates = int(prediction_distance // distance)
-    last_coordinate_distance_ratio = 1 + prediction_distance % distance / distance
-    r = distance / prediction_distance
+    number_of_coordinates = int(prediction_distance // distance) if distance > 0 else 0
+    last_coordinate_distance_ratio = (1 + prediction_distance % distance / distance) if distance > 0 else 0
+    r = (distance / prediction_distance) if prediction_distance > 0 else 0
     ratio = 1 + r if r > 0 else -1 + r
 
     def reducer(acc: List[ndarray], _: int) -> List[ndarray]:
