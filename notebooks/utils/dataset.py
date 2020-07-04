@@ -4,7 +4,7 @@ Dataset related functions
 
 from itertools import chain
 from os import fwalk
-from typing import List
+from typing import List, Tuple
 from numpy import loadtxt, ndarray
 
 # CONSTANTS
@@ -38,6 +38,25 @@ def load_users_trajectories(user_id: int) -> List[ndarray]:
         [loadtxt(f'{dirpath}/{f}') for f in filenames]
         for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
     ]))
+
+
+def load_users_trajectories_with_target(user_id: int, trajectory_id: int) -> Tuple[ndarray, List[ndarray]]:
+    """
+    Loads target trajectory and the rest of target user's trajectories and returns them as a tuple
+    :param user_id: user's id
+    :param trajectory_id: trajectory's id
+    :return: target trajectory and the rest of user's trajectories as a tuple
+    """
+    assert user_id > 0
+    assert trajectory_id > 0
+
+    return (
+        loadtxt(f'{DATASET_DIRECTORY}/{user_id}/{trajectory_id}'),  # target trajectory
+        list(chain(*[  # the rest of them
+            [loadtxt(f'{dirpath}/{f}') for f in filenames if f != f'{trajectory_id}']  # omit the target trajectory
+            for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
+        ]))
+    )
 
 
 def load_all_trajectories() -> List[ndarray]:
