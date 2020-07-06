@@ -28,8 +28,8 @@ def find_closest_point(trajectory: ndarray, target_point: ndarray) -> ndarray:
 
 
 def find_trajectory_overlapping_trajectories(
-        target_trajectory: ndarray,
         dataset_trajectories: List[ndarray],
+        target_trajectory: ndarray,
         threshold: float
 ) -> List[ndarray]:
     """
@@ -63,8 +63,8 @@ def find_trajectory_overlapping_trajectories(
 
 
 def find_point_overlapping_trajectories(
-        target_point: ndarray,
         dataset_trajectories: List[ndarray],
+        target_point: ndarray,
         threshold: float
 ) -> List[ndarray]:
     """
