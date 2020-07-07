@@ -5,7 +5,7 @@ Finding related functions
 """
 
 from typing import List
-from numpy import ndarray, size
+from numpy import all, ndarray, size, where
 from .distance import calculate_distance_in_meters
 
 
@@ -89,3 +89,16 @@ def find_point_overlapping_trajectories(
                 matches.append(dataset_trajectory)
                 break
     return matches
+
+
+def find_target_point_indices(trajectory: ndarray, target_point: ndarray) -> ndarray:
+    """
+    Find target point indices from trajectory
+    :param trajectory: trajectory
+    :param target_point: target point
+    :return: indices as ndarray
+    """
+    return where(all(
+        trajectory == target_point,
+        axis=1
+    ))
