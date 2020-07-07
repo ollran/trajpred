@@ -20,11 +20,11 @@ def find_closest_point(trajectory: ndarray, target_point: ndarray) -> ndarray:
     assert size(trajectory, 1) == 4
     assert size(target_point, 0) == 4
 
-    _min_distance, closest_point = min(zip(map(
+    _minimum_distance, minimum_index = min(zip(map(
         lambda point: calculate_distance_in_meters(start=target_point, end=point),
         trajectory
-    ), trajectory))
-    return closest_point
+    ), range(size(trajectory, 0))))
+    return trajectory[minimum_index]
 
 
 def find_trajectory_overlapping_trajectories(
