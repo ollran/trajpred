@@ -6,7 +6,7 @@ Trajectory splitting related functions
 
 from typing import List, Tuple
 from numpy import array, concatenate, ndarray, size
-from .find import find_target_point_indices
+from .find import find_closest_point, find_target_point_indices
 
 
 def split_trajectory(trajectory: ndarray, ratio: float) -> Tuple[ndarray, ndarray]:
@@ -130,6 +130,32 @@ def split_trajectories_from_target_point_inclusively(
         lambda trajectory: split_trajectory_from_target_point_inclusively(
             trajectory=trajectory,
             target_point=target_point
+        ),
+        trajectories
+    ))
+
+
+def split_trajectories_from_closest_point_inclusively(
+        trajectories: List[ndarray],
+        target_point: ndarray
+) -> List[Tuple[ndarray, ndarray]]:
+    """
+    Split trajectories from closest point to target point inclusively. The target point will be included in both parts
+    of the result.
+    :param trajectories: list of trajectories to process
+    :param target_point: target coordinate point
+    :return: list of head and tail parts that include the target point
+    """
+    assert len(trajectories) > 0
+    assert size(target_point, 0) == 4
+
+    return list(map(
+        lambda trajectory: split_trajectory_from_target_point_inclusively(
+            trajectory=trajectory,
+            target_point=find_closest_point(
+                trajectory=trajectory,
+                target_point=target_point
+            )
         ),
         trajectories
     ))
