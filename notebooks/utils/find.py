@@ -98,8 +98,8 @@ def find_target_point_indices(trajectory: ndarray, target_point: ndarray) -> nda
     :param target_point: target point
     :return: indices as ndarray
     """
-    assert size(trajectory, 0) == 4
-    assert size(trajectory, 1) > 0
+    assert size(trajectory, 0) > 0
+    assert size(trajectory, 1) == 4
     assert size(target_point, 0) == 4
 
     return where(all(
