@@ -1,3 +1,5 @@
+# pylint: disable=E0402
+
 """
 Trajectory splitting related functions
 """
