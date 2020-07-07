@@ -4,6 +4,7 @@ Trajectory splitting related functions
 
 from typing import List, Tuple
 from numpy import array, concatenate, ndarray, size
+from .find import find_target_point_indices
 
 
 def split_trajectory(trajectory: ndarray, ratio: float) -> Tuple[ndarray, ndarray]:
@@ -81,3 +82,52 @@ def split_trajectories_with_overlap(
             ratio=ratio
         ) for trajectory in trajectories
     ]
+
+
+def split_trajectory_from_target_point_inclusively(
+        trajectory: ndarray,
+        target_point: ndarray
+) -> Tuple[ndarray, ndarray]:
+    """
+    Split trajectory from target point inclusively. The target point will be included in both parts of the result
+    :param trajectory: trajectory to split
+    :param target_point: target coordinate point
+    :return: head and tail parts including the target point
+    """
+    assert size(trajectory, 0) > 0
+    assert size(trajectory, 1) == 4
+    assert size(target_point, 0) == 4
+
+    indices = find_target_point_indices(
+        trajectory=trajectory,
+        target_point=target_point
+    )
+    first_index = indices[0][0] if size(indices, 0) == 1 else 0
+    last_index = indices[-1][0] if size(indices, 0) > 1 else first_index
+
+    return (
+        trajectory[:first_index + 1],
+        trajectory[last_index:]
+    )
+
+
+def split_trajectories_from_target_point_inclusively(
+        trajectories: List[ndarray],
+        target_point: ndarray
+) -> List[Tuple[ndarray, ndarray]]:
+    """
+    Split trajectories from target point inclusively. The target point will be included in both parts of the result.
+    :param trajectories: list of trajectories to process
+    :param target_point: target coordinate point
+    :return: list of head and tail parts that include the target point
+    """
+    assert len(trajectories) > 0
+    assert size(target_point, 0) == 4
+
+    return list(map(
+        lambda trajectory: split_trajectory_from_target_point_inclusively(
+            trajectory=trajectory,
+            target_point=target_point
+        ),
+        trajectories
+    ))
