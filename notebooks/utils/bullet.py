@@ -37,18 +37,18 @@ def bullet_predict_next_coords(start: ndarray, end: ndarray, ratio: float) -> nd
     ])
 
 
-def bullet_prediction(start: ndarray, end: ndarray, time: float) -> ndarray:
+def bullet_prediction(trajectory: ndarray, time: float) -> ndarray:
     """
     Predict time interval
-    :param start: start coordinate
-    :param end: end coordinate
+    :param trajectory: trajectory that is used in prediction
     :param time: time to be predicted in seconds
     :return: predicted coordinates
     """
-    assert size(start, 0) == 4
-    assert size(end, 0) == 4
+    assert size(trajectory, 0) >= 2
+    assert size(trajectory, 1) == 4
     assert time > 0
 
+    start, end = trajectory[-2], trajectory[-1]
     speed = calculate_speed_in_ms(
         start=start,
         end=end
