@@ -125,9 +125,12 @@ def predict_by_picking_random_tail(
         trajectory=prediction
     )
     remaining_distance_to_predict = distance_to_predict - predicted_distance
-    remaining_point = generate_point_from_between_by_distance(
-        start=prediction[-1],
-        end=rest[0],
-        distance=remaining_distance_to_predict
-    )
-    return row_stack((prediction, remaining_point))
+
+    if remaining_distance_to_predict > 0:
+        remaining_point = generate_point_from_between_by_distance(
+            start=prediction[-1],
+            end=rest[0],
+            distance=remaining_distance_to_predict
+        )
+        return row_stack((prediction, remaining_point))
+    return prediction
