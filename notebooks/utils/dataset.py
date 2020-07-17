@@ -68,3 +68,17 @@ def load_all_trajectories() -> List[ndarray]:
         [loadtxt(f'{dirpath}/{f}') for f in filenames]
         for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}')
     ]))
+
+
+def get_list_of_users_trajectory_ids(user_id: int) -> List[int]:
+    """
+    Get list of trajectory ids by user_id
+    :param user_id: user's id
+    :return: list of trajectory ids
+    """
+    assert user_id > 0
+
+    return list(chain(*[
+        [int(f) for f in filenames]
+        for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
+    ]))
