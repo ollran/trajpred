@@ -112,7 +112,7 @@ def predict_by_picking_random_tail(
     )
     if len(tails) == 0:
         return array([[]])
-    random_tail = choice(tails)
+    random_tail = choice(tails) if len(tails) > 1 else tails[0]
     speed = calculate_speed_in_ms(
         start=start,
         end=end
