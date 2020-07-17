@@ -34,6 +34,8 @@ def construct_potential_tails(
         target_point=target_point,
         threshold=threshold
     )
+    if len(overlapping_trajectories) == 0:
+        return []
     split_trajectories = split_trajectories_from_closest_point_inclusively(
         trajectories=overlapping_trajectories,
         target_point=target_point
@@ -66,7 +68,7 @@ def generate_point_from_between_by_distance(
         start=start,
         end=end
     )
-    ratio = distance / start_end_distance
+    ratio = (distance / start_end_distance) if start_end_distance > 0 else 0
     [lat_start, lon_start, ts_start, alt_start] = start
     [lat_end, lon_end, ts_end, alt_end] = end
     delta_lat = lat_end - lat_start
@@ -108,6 +110,8 @@ def predict_by_picking_random_tail(
         target_point=end,
         threshold=threshold
     )
+    if len(tails) == 0:
+        return array([[]])
     random_tail = choice(tails)
     speed = calculate_speed_in_ms(
         start=start,
@@ -120,13 +124,12 @@ def predict_by_picking_random_tail(
         trajectory=random_tail,
         distance=distance_to_predict
     )
-
     predicted_distance = calculate_trajectory_length_in_meters(
         trajectory=prediction
     )
     remaining_distance_to_predict = distance_to_predict - predicted_distance
 
-    if remaining_distance_to_predict > 0:
+    if remaining_distance_to_predict > 0 and size(rest[0]) > 0:
         remaining_point = generate_point_from_between_by_distance(
             start=prediction[-1],
             end=rest[0],
