@@ -10,7 +10,7 @@ from numpy import array, ndarray, row_stack, size
 from numpy.random import choice
 from .distance import calculate_distance_in_meters, calculate_trajectory_length_in_meters
 from .find import find_point_overlapping_trajectories
-from .speed import calculate_speed_in_ms
+from .speed import calculate_speed_in_ms, calculate_average_speed_in_ms
 from .split import split_trajectories_from_closest_point_inclusively, split_trajectory_by_distance
 
 
@@ -113,13 +113,17 @@ def predict_by_picking_random_tail(
         start=start,
         end=end
     )
-    distance_to_predict = time * speed
+    distance_to_predict = (time * speed) if speed > 0 else (time * calculate_average_speed_in_ms(
+        trajectory=trajectory
+    ))
     prediction, rest = split_trajectory_by_distance(
         trajectory=random_tail,
         distance=distance_to_predict
     )
 
-    predicted_distance = calculate_trajectory_length_in_meters(prediction)
+    predicted_distance = calculate_trajectory_length_in_meters(
+        trajectory=prediction
+    )
     remaining_distance_to_predict = distance_to_predict - predicted_distance
     remaining_point = generate_point_from_between_by_distance(
         start=prediction[-1],
