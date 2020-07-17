@@ -6,6 +6,7 @@ Trajectory splitting related functions
 
 from typing import List, Tuple
 from numpy import array, concatenate, ndarray, size
+from .distance import calculate_distance_in_meters, calculate_trajectory_length_in_meters
 from .find import find_closest_point, find_target_point_indices
 
 
@@ -159,3 +160,48 @@ def split_trajectories_from_closest_point_inclusively(
         ),
         trajectories
     ))
+
+
+def split_trajectory_by_distance(trajectory: ndarray, distance: float) -> Tuple[ndarray, ndarray]:
+    """
+    Split the trajectory by distance from the start of the trajectory
+    :param trajectory: target trajectory
+    :param distance: distance in meters
+    :return: head and tail of the trajectory
+    """
+    assert size(trajectory, 0) >= 2
+    assert size(trajectory, 1) == 4
+    assert distance > 0
+
+    base_case = trajectory, array([[]])
+    total_length = calculate_trajectory_length_in_meters(
+        trajectory=trajectory
+    )
+    if distance >= total_length:
+        return base_case
+
+    collected_distance = calculate_distance_in_meters(
+        start=trajectory[0],
+        end=trajectory[1]
+    )
+
+    target_point = None
+    last_coordinate = trajectory[1]
+    for current_coordinate in trajectory[2:]:
+        current_distance = calculate_distance_in_meters(
+            start=last_coordinate,
+            end=current_coordinate
+        )
+        distance_sum = collected_distance + current_distance
+        if distance_sum > distance:
+            target_point = last_coordinate
+            break
+        collected_distance += distance_sum
+
+    if target_point is not None:
+        head, tail = split_trajectory_from_target_point_inclusively(
+            trajectory=trajectory,
+            target_point=target_point
+        )
+        return head, tail[1:]
+    return base_case
