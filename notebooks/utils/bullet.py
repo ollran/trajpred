@@ -21,6 +21,8 @@ def bullet_predict_next_coords(start: ndarray, end: ndarray, ratio: float) -> nd
     """
     assert size(start, 0) == 4
     assert size(end, 0) == 4
+    assert ratio >= 0
+    assert ratio <= 1
 
     [lat_start, lon_start, ts_start, alt_start] = start
     [lat_end, lon_end, ts_end, alt_end] = end
