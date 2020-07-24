@@ -178,7 +178,7 @@ def split_trajectory_by_distance(trajectory: ndarray, distance: float) -> Tuple[
         trajectory=trajectory
     )
     if distance >= total_length:
-        return base_case
+        return trajectory, array([[]])
 
     collected_distance = calculate_distance_in_meters(
         start=trajectory[0],
@@ -187,7 +187,8 @@ def split_trajectory_by_distance(trajectory: ndarray, distance: float) -> Tuple[
 
     target_point = None
     last_coordinate = trajectory[1]
-    for current_coordinate in trajectory[2:]:
+    index = 2
+    for current_coordinate in trajectory[index:]:
         current_distance = calculate_distance_in_meters(
             start=last_coordinate,
             end=current_coordinate
@@ -197,11 +198,10 @@ def split_trajectory_by_distance(trajectory: ndarray, distance: float) -> Tuple[
             target_point = last_coordinate
             break
         collected_distance += distance_sum
+        last_coordinate = current_coordinate
+        index += 1
 
-    if target_point is not None:
-        head, tail = split_trajectory_from_target_point_inclusively(
-            trajectory=trajectory,
-            target_point=target_point
-        )
-        return head, tail[1:]
-    return base_case
+    if target_point is None:
+        return base_case
+    head, tail = trajectory[:index], trajectory[index:]
+    return head, tail[1:]
