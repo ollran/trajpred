@@ -104,6 +104,7 @@ def predict_by_picking_random_tail(
     assert time > 0
     assert threshold > 0
 
+    base_case = array([[]])
     start, end = trajectory[-2], trajectory[-1]
     tails = construct_potential_tails(
         dataset_trajectories=dataset_trajectories,
@@ -111,15 +112,18 @@ def predict_by_picking_random_tail(
         threshold=threshold
     )
     if len(tails) == 0:
-        return array([[]])
+        return base_case
     random_tail = choice(tails) if len(tails) > 1 else tails[0]
     speed = calculate_speed_in_ms(
         start=start,
         end=end
     )
-    distance_to_predict = (time * speed) if speed > 0 else (time * calculate_average_speed_in_ms(
-        trajectory=trajectory
-    ))
+    distance_to_predict = time * speed
+    if distance_to_predict <= 0:
+        return base_case
+    if size(random_tail, 0) == 1:
+        return random_tail
+
     prediction, rest = split_trajectory_by_distance(
         trajectory=random_tail,
         distance=distance_to_predict
@@ -128,8 +132,7 @@ def predict_by_picking_random_tail(
         trajectory=prediction
     )
     remaining_distance_to_predict = distance_to_predict - predicted_distance
-
-    if remaining_distance_to_predict > 0 and size(rest[0]) > 0:
+    if remaining_distance_to_predict > 0 and size(rest, 0) > 0 and size(rest, 1) == 4:
         remaining_point = generate_point_from_between_by_distance(
             start=prediction[-1],
             end=rest[0],
