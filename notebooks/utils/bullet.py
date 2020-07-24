@@ -4,14 +4,13 @@
 Bullet prediction method
 """
 
-from functools import reduce
 from typing import List
-from numpy import append, array, expand_dims, ndarray, size
+from numpy import array, ndarray, size
 from .speed import calculate_speed_in_ms
 from .distance import calculate_distance_in_meters
 
 
-def bullet_predict_next_coords(start: ndarray, end: ndarray, ratio: float) -> ndarray:
+def bullet_predict_next_coords(start: ndarray, end: ndarray, ratio: float = 1) -> ndarray:
     """
     Calculate next coords
     :param start: start coordinate
@@ -57,34 +56,18 @@ def bullet_prediction(trajectory: ndarray, time: float) -> ndarray:
         start=start,
         end=end
     )
-    prediction_distance = time * speed
-    number_of_coordinates = int(prediction_distance // distance) if distance > 0 else 0
-    last_coordinate_distance_ratio = (1 + prediction_distance % distance / distance) if distance > 0 else 0
-    r = (distance / prediction_distance) if prediction_distance > 0 else 0
-    ratio = 1 + r if r > 0 else -1 + r
+    distance_to_predict = (time * speed) if distance > 0 else 0
+    number_of_coordinates = max(int(distance_to_predict // distance) - 1, 1) \
+        if distance > 0 else 0
 
-    def reducer(acc: List[ndarray], _: int) -> List[ndarray]:
-        [head, tail] = acc[-2:]
-        return list(
-            acc + [bullet_predict_next_coords(
-                start=head,
-                end=tail,
-                ratio=ratio
-            )]
-        )
-
-    prediction = array(reduce(
-        reducer,
-        range(number_of_coordinates),
-        [end, bullet_predict_next_coords(
+    prediction: List[ndarray] = [end]
+    for _ in range(number_of_coordinates):
+        next_coordinate = bullet_predict_next_coords(
             start=start,
-            end=end,
-            ratio=ratio
-        )]
-    ))
+            end=end
+        )
+        prediction.append(next_coordinate)
+        start = end
+        end = next_coordinate
 
-    return append(prediction, expand_dims(bullet_predict_next_coords(
-        start=prediction[-2],
-        end=prediction[-1],
-        ratio=last_coordinate_distance_ratio
-    ), 0), axis=0)
+    return array(prediction)
