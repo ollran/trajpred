@@ -92,11 +92,11 @@ def predict_by_picking_random_tail(
 ) -> ndarray:
     """
     Predict by picking random tail from the dataset
-    :param dataset_trajectories:
-    :param trajectory:
-    :param time:
-    :param threshold:
-    :return:
+    :param dataset_trajectories: trajectories in the dataset (history)
+    :param trajectory: target trajectory
+    :param time: time in seconds
+    :param threshold: threshold in meters
+    :return: prediction
     """
     assert len(dataset_trajectories) > 0
     assert size(trajectory, 0) >= 2
