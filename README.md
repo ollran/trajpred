@@ -15,5 +15,5 @@ Every method works by first splitting the trajectory into two parts and then usi
 ### Bullet method
 *The bullet method* uses only the last two coordinates of the head of the trajectory because it is supposed to be a simple method for later comparison.
 
-### Random tail
+### Random tail method
 *The random tail method* collects overlapping trajectories from the history and picks one randomly. The random tail is used as the prediction by selecting the right amount of coordinates from it.
