@@ -1,0 +1,14 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src/main"]
+
+ :dependencies
+ []
+
+ :dev-http {8080 "public"}
+
+ :builds
+ {:visualizer
+  {:target :browser
+   :modules {:main {:init-fn visualizer.core/init}}
+   }}}
