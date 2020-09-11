@@ -8,6 +8,8 @@
 
 (defn init []
   (let [l-map (.map L "mapid")
-        l-tilelayer (.tileLayer L "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" tilelayer-settings)]
+        l-tilelayer (.tileLayer L "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" tilelayer-settings)
+        l-scale (.control.scale L)]
     (.setView l-map (array 62.601090 29.763530) 13)
-    (.addTo l-tilelayer l-map)))
+    (.addTo l-tilelayer l-map)
+    (.addTo l-scale l-map)))
