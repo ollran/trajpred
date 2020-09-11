@@ -30,9 +30,13 @@
     (.addTo polyline L-map)
     (.fitBounds L-map bounds)))
 
-(defn add [id]
+(defn ^:export add [id]
   (let [raw-input (-> js/document
                       (.getElementById id)
                       (.-value))
-        parsed-input (parse-raw-input raw-input)]
-    (draw-path parsed-input "red")))
+        parsed-input (parse-raw-input raw-input)
+        color (cond (= id "head") "black"
+                    (= id "tail") "blue"
+                    (= id "pred") "red")]
+    (when (not-empty parsed-input)
+      (draw-path parsed-input color))))
