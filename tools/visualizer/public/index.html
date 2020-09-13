@@ -10,9 +10,9 @@
             integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
             crossorigin=""></script>
     <style>
-        #mapid {
-            height: 90vh;
-        }
+      #mapid {
+          height: 90vh;
+      }
     </style>
   </head>
   <body>
@@ -20,5 +20,13 @@
     <script src="js/main.js"></script>
     <textarea id="head"></textarea>
     <button onclick="visualizer.core.add('head')">add head</button>
+
+    <textarea id="tail"></textarea>
+    <button onclick="visualizer.core.add('tail')">add tail</button>
+
+    <textarea id="pred"></textarea>
+    <button onclick="visualizer.core.add('pred')">add pred</button>
+
+    <button onclick="visualizer.core.clear_all()">Clear all</button>
   </body>
 </html>
