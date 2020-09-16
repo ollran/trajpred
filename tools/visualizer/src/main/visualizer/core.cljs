@@ -1,3 +1,14 @@
+;;;; Visualization tool
+
+;;;; - https://shadow-cljs.org/
+;;;;     shadow-cljs provides everything you need
+;;;;     to compile your ClojureScript code with a
+;;;;     focus on simplicity and ease of use.
+;;;;
+;;;; - https://leafletjs.com/
+;;;;     an open-source JavaScript library
+;;;;     for mobile-friendly interactive maps.
+
 (ns visualizer.core
   (:require [clojure.string :as str]))
 
