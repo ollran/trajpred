@@ -1,7 +1,7 @@
 # Preprocessor
 
-<img alt="Dióscoro Teófilo Puebla Tolín, 1862"
-     src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Desembarco_de_Col%C3%B3n_de_Di%C3%B3scoro_Puebla.jpg"
+<img alt="Christopher Columbus kneeling in front of Queen Isabella I of Castile."
+     src="https://upload.wikimedia.org/wikipedia/commons/5/53/Christopher_Columbus7.jpg"
      align="right"
      width="448px"
 />
