@@ -32,3 +32,7 @@ Every method works by first splitting the trajectory into two parts and then usi
 
 #### Random tail method
 *The random tail method* collects overlapping trajectories from the history and picks one randomly. The random tail is used as the prediction by selecting the right amount of coordinates from it.
+
+## References
+
+* [Data-driven Trajectory Prediction and Spatial Variability of Prediction Performance in Mari-time Location Based Services](https://www.zora.uzh.ch/id/eprint/177490/1/LBS_2019.pdf)
