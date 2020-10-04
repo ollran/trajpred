@@ -21,7 +21,10 @@ defmodule Servant.MixProject do
   defp deps do
     [
       {:cowboy, "~> 2.8"},
-      {:plug, "~> 1.10"}
+      {:plug, "~> 1.10"},
+
+      # Development dependencies
+      {:credo, "~> 1.5.0-rc.2", only: [:dev, :test], runtime: false}
     ]
   end
 end
