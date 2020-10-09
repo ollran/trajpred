@@ -9,6 +9,7 @@ defmodule Servant.Application do
     children = [
       # Starts a worker by calling: Servant.Worker.start_link(arg)
       # {Servant.Worker, arg}
+      Servant.Router
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
