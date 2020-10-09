@@ -20,5 +20,5 @@ defmodule Servant.Router do
     }
 
   def start_link(_opts),
-    do: Plug.Adapters.Cowboy2.http(__MODULE__, [])
+    do: Plug.Cowboy.http(__MODULE__, [])
 end
