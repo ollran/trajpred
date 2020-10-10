@@ -8,6 +8,14 @@ defmodule Servant.Router do
   plug(:dispatch)
 
   get("/", do: send_resp(conn, 200, "found"))
+
+  get "/dataset/:user_id/:trajectory_id" do
+    case Servant.DatasetHandler.fetch_trajectory(user_id, trajectory_id) do
+      {:ok, response} -> send_resp(conn, 200, response)
+      _ -> send_resp(conn, 404, "not found")
+    end
+  end
+
   match(_, do: send_resp(conn, 404, "not found"))
 
   def child_spec(opts),
