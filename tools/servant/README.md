@@ -6,4 +6,8 @@
      width="256px"
 />
 
-Simple helper server written in Elixir.
+>*Architects know that some kinds of design problems are more personal than others. One of the cleanest, most abstract design problems is designing bridges. There your job is largely a matter of spanning a given distance with the least material.*
+>
+>&mdash; Paul Graham, [*Five Questions About Language Design*](http://www.paulgraham.com/langdes.html)
+
+Servant is a simple helper server written in Elixir. It's just a wrapper around [Ninenine's Cowboy](https://github.com/ninenines/cowboy).
