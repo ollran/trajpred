@@ -10,6 +10,7 @@ from numpy import array, ndarray, row_stack, size
 from numpy.random import choice
 from .distance import calculate_distance_in_meters, calculate_trajectory_length_in_meters
 from .find import find_point_overlapping_trajectories
+from .ranking import rank_by_average_speed_similarity
 from .speed import calculate_speed_in_ms, calculate_average_speed_in_ms
 from .split import split_trajectories_from_closest_point_inclusively, split_trajectory_by_distance
 
@@ -140,3 +141,47 @@ def predict_by_picking_random_tail(
         )
         return row_stack((prediction, remaining_point))
     return prediction
+
+
+def predict_by_picking_tail_with_similar_speed(
+        dataset_trajectories: List[ndarray],
+        trajectory: ndarray,
+        time: float,
+        threshold: float = 10
+) -> ndarray:
+    """
+    Predict by ranking tails in the dataset and picking the one with most similar speed
+    :param dataset_trajectories: trajectory history
+    :param trajectory: target trajectory
+    :param time: time in seconds
+    :param threshold: threshold in meters
+    :return: prediction
+    """
+    assert len(dataset_trajectories) > 0
+    assert size(trajectory, 0) >= 2
+    assert size(trajectory, 1) == 4
+    assert time > 0
+    assert threshold > 0
+
+    base_case = array([[]])
+    start, end = trajectory[-2], trajectory[-1]
+    tails = construct_potential_tails(
+        dataset_trajectories=dataset_trajectories,
+        target_point=end,
+        threshold=threshold
+    )
+    if len(tails) == 0:
+        return base_case
+
+    # Filter short tails from predictions
+    filtered_tails = list(filter(
+        lambda tail: len(tail) >= 2,
+        tails
+    ))
+    ranked = rank_by_average_speed_similarity(
+        trajectory=trajectory,
+        tails=filtered_tails
+    )
+    if len(ranked) == 0:
+        return base_case
+    return ranked[0]
