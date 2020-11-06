@@ -4,7 +4,6 @@
 Historical prediction method related functions
 """
 
-# from itertools import chain
 from typing import List
 from numpy import array, ndarray, row_stack, size
 from numpy.random import choice
@@ -42,11 +41,6 @@ def construct_potential_tails(
         target_point=target_point
     )
     return list(map(lambda pair: pair[1], split_trajectories))
-    # heads + tails
-    # return list(chain(*map(
-    #    lambda pair: [pair[0], pair[1]],
-    #    split_trajectories
-    # )))
 
 
 def generate_point_from_between_by_distance(
