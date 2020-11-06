@@ -10,7 +10,7 @@ from numpy.random import choice
 from .distance import calculate_distance_in_meters, calculate_trajectory_length_in_meters
 from .find import find_point_overlapping_trajectories
 from .ranking import rank_by_average_speed_similarity
-from .speed import calculate_speed_in_ms, calculate_average_speed_in_ms
+from .speed import calculate_speed_in_ms
 from .split import split_trajectories_from_closest_point_inclusively, split_trajectory_by_distance
 
 
