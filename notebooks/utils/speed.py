@@ -32,7 +32,7 @@ def calculate_average_speed_in_ms(trajectory: ndarray) -> float:
     """
     Calculate the average speed of the trajectory in m/s
     :param trajectory: target trajectory
-    :return:  average speed in m/s
+    :return: average speed in m/s
     """
     assert size(trajectory, 0) >= 2
     assert size(trajectory, 1) == 4
