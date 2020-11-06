@@ -30,7 +30,7 @@ def rank_by_average_speed_similarity(trajectory: ndarray, tails: List[ndarray]) 
         tails
     ))
     tails_with_speed_difference = list(map(
-        lambda pair: (abs(trajectory_average_speed - pair[1]), pair[1]),
+        lambda pair: (abs(trajectory_average_speed - pair[0]), pair[1]),
         tails_with_average_speeds
     ))
 
