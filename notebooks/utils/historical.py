@@ -170,18 +170,45 @@ def predict_by_picking_tail_with_similar_speed(
         target_point=end,
         threshold=threshold
     )
-    if len(tails) == 0:
-        return base_case
-
     # Filter short tails from predictions
     filtered_tails = list(filter(
         lambda tail: len(tail) >= 2,
         tails
     ))
+    if len(filtered_tails) == 0:
+        return base_case
+
     ranked = rank_by_average_speed_similarity(
         trajectory=trajectory,
         tails=filtered_tails
     )
     if len(ranked) == 0:
         return base_case
-    return ranked[0]
+    target = ranked[0]
+
+    speed = calculate_speed_in_ms(
+        start=start,
+        end=end
+    )
+    distance_to_predict = time * speed
+    if distance_to_predict <= 0:
+        return base_case
+    if size(target, 0) == 1:
+        return target
+
+    prediction, rest = split_trajectory_by_distance(
+        trajectory=target,
+        distance=distance_to_predict
+    )
+    predicted_distance = calculate_trajectory_length_in_meters(
+        trajectory=prediction
+    )
+    remaining_distance_to_predict = distance_to_predict - predicted_distance
+    if remaining_distance_to_predict > 0 and size(rest, 0) > 0 and size(rest, 1) == 4:
+        remaining_point = generate_point_from_between_by_distance(
+            start=prediction[-1],
+            end=rest[0],
+            distance=remaining_distance_to_predict
+        )
+        return row_stack((prediction, remaining_point))
+    return prediction
