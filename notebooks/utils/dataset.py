@@ -40,7 +40,10 @@ def load_users_trajectories(user_id: int) -> List[ndarray]:
     ]))
 
 
-def load_users_trajectories_with_target(user_id: int, trajectory_id: int) -> Tuple[ndarray, List[ndarray]]:
+def load_users_trajectories_with_target(
+        user_id: int,
+        trajectory_id: int
+) -> Tuple[ndarray, List[ndarray]]:
     """
     Loads target trajectory and the rest of target user's trajectories and returns them as a tuple
     :param user_id: user's id
@@ -53,7 +56,8 @@ def load_users_trajectories_with_target(user_id: int, trajectory_id: int) -> Tup
     return (
         loadtxt(f'{DATASET_DIRECTORY}/{user_id}/{trajectory_id}'),  # target trajectory
         list(chain(*[  # the rest of them
-            [loadtxt(f'{dirpath}/{f}') for f in filenames if f != f'{trajectory_id}']  # omit the target trajectory
+            [loadtxt(f'{dirpath}/{f}')
+             for f in filenames if f != f'{trajectory_id}']  # omit the target trajectory
             for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
         ]))
     )
