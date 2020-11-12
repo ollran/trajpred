@@ -1,4 +1,4 @@
-# pylint: disable=E0402
+# pylint: disable=E0402,R0914
 
 """
 Historical prediction method related functions
