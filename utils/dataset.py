@@ -3,7 +3,7 @@ Dataset related functions
 """
 
 from itertools import chain
-from os import fwalk
+from os import fwalk, scandir
 from typing import List, Tuple
 from numpy import loadtxt, ndarray
 
@@ -86,3 +86,11 @@ def get_list_of_users_trajectory_ids(user_id: int) -> List[int]:
         [int(f) for f in filenames]
         for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
     ]))
+
+
+def get_list_of_user_ids() -> List[int]:
+    """
+    Returns a list of all user ids in the dataset
+    :return: List of user ids
+    """
+    return sorted([int(f.name) for f in scandir(DATASET_DIRECTORY)])
