@@ -8,7 +8,7 @@ from typing import List, Tuple
 from numpy import loadtxt, ndarray
 
 # CONSTANTS
-DATASET_DIRECTORY = '../dataset'
+DATASET_DIRECTORY = './dataset'
 
 
 def load_trajectory(user_id: int, trajectory_id: int) -> ndarray:
