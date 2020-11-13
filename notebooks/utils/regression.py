@@ -26,4 +26,5 @@ def predict_with_linear_regression(
     tra_x, tra_y, ts, alt = trajectory[:, 0], trajectory[:, 1], trajectory[:, 2], trajectory[:, 3]
     slope, intercept, _r_value, _p_value, _std_err = linregress(tra_y, tra_x)
     line = array(list(zip(intercept + slope * tra_y, tra_y, ts, alt)))
-    return bullet_prediction(line, time)
+
+    return bullet_prediction(trajectory=line, time=time)
