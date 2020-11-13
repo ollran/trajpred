@@ -4,10 +4,10 @@
 Report generating functions
 """
 
-from typing import Dict
+from typing import Dict, List
 from numpy import average, median, std, size
 from .bullet import bullet_prediction
-from .dataset import get_list_of_users_trajectory_ids, load_users_trajectories_with_target
+from .dataset import get_list_of_user_ids, get_list_of_users_trajectory_ids, load_users_trajectories_with_target
 from .distance import calculate_trajectory_length_in_meters
 from .error import calculate_error_vector
 from .split import split_trajectory_with_overlap
@@ -58,7 +58,7 @@ def generate_report_for_user(
         else:
             if verbosity > 0:
                 print('unknown prediction method')
-            return
+            return {}
         if size(prediction, 0) < 2:
             failed += 1
             if verbosity > 1:
@@ -98,3 +98,36 @@ def generate_report_for_user(
         )
 
     return report
+
+
+def generate_report_for_dataset(
+        method: str,
+        ratio: float = 0.5,
+        threshold: float = 10,
+        time: float = 60,
+        verbosity: int = 0
+) -> List[Dict[str, str]]:
+    """
+    Generate a list of reports for all users in the dataset
+    :param method: prediction method
+    :param ratio: split ratio
+    :param threshold: threshold in meters
+    :param time: time in seconds
+    :param verbosity: verbosity of the generation process
+    :return: list of reports
+    """
+    users = get_list_of_user_ids()
+    reports = []
+    for user in users:
+        if verbosity > 0:
+            print(f'Generating report for user {user}')
+        report = generate_report_for_user(
+            user_id=user,
+            method=method,
+            ratio=ratio,
+            threshold=threshold,
+            time=time,
+            verbosity=verbosity
+        )
+        reports.append(report)
+    return reports
