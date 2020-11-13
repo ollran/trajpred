@@ -12,12 +12,14 @@ Trajectory predictions implemented in python
 
 Jupyter notebooks are used for experimenting, measurements and generating simple visualizations.
 
-[`utils`](./notebooks/utils/) contains all the helper functions used in the Jupyter notebooks.
-
 ### Tools
 
 * [Preprocessor](./tools/preprocessor/) &mdash; Python script that downloads, verifies and extracts the dataset.
 * [Visualizer](./tools/visualizer/) &mdash; Simple tool written in ClojureScript for visualizing trajectories in the browser.
+
+### Utils
+
+[`utils`](./utils/) contains all the helper functions used in the Jupyter notebooks.
 
 ## Predictions
 
