@@ -5,7 +5,7 @@ CLI utility for predictions and reports
 """
 
 from argparse import ArgumentParser
-from utils.report import generate_report_for_user
+from utils.report import generate_report_for_dataset, generate_report_for_user
 
 
 def main() -> None:
@@ -60,16 +60,27 @@ def main() -> None:
     )
 
     args = parser.parse_args()
-
-    report = generate_report_for_user(
-        user_id=args.user_id,
-        method=args.prediction_method,
-        ratio=args.ratio,
-        threshold=args.threshold,
-        time=args.time,
-        verbosity=args.verbosity
-    )
-    print(report)
+    if args.user_id:
+        print(f'Generating {args.prediction_method} method report for user {args.user_id}')
+        report = generate_report_for_user(
+            user_id=args.user_id,
+            method=args.prediction_method,
+            ratio=args.ratio,
+            threshold=args.threshold,
+            time=args.time,
+            verbosity=args.verbosity
+        )
+        print(report)
+    else:
+        print(f'Generating {args.prediction_method} method report for the whole dataset')
+        reports = generate_report_for_dataset(
+            method=args.prediction_method,
+            ratio=args.ratio,
+            threshold=args.threshold,
+            time=args.time,
+            verbosity=args.verbosity
+        )
+        print(reports)
 
 
 if __name__ == '__main__':
