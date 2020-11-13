@@ -150,3 +150,15 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
+"""
+Should I ship with assertions on? Should I even write assertions?
+
+- Axiom: Your program will crash.
+- Lemma: Even if our code won't crash, someone else's code will."
+https://wiki.c2.com/?ShipWithAssertionsOn
+
+I guess it is better to fail early and loud when a condition that should never happen happens anyway.
+Just like in Erlang: program the happy path, crash otherwise.
+https://youtu.be/HCwRGHj5jOE
+"""
