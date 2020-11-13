@@ -29,6 +29,9 @@ def fetch_dataset(url: str, dataset_archive_filename: str) -> None:
     :param dataset_archive_filename: the destination filename
     :return: None
     """
+    assert url
+    assert dataset_archive_filename
+
     with get(url=url, stream=True) as response, \
             open(dataset_archive_filename, mode='wb') as file_handle:
         for chunk in response.iter_content(chunk_size=128):
@@ -42,6 +45,9 @@ def verify_dataset(dataset_archive_filename: str, dataset_archive_hash_sha2: str
     :param dataset_archive_hash_sha2: the SHA2 hash of the dataset ZIP archive
     :return: True of False depending on the result of the check
     """
+    assert dataset_archive_filename
+    assert dataset_archive_hash_sha2
+
     hash_sha2 = sha256()
     with open(dataset_archive_filename, mode='rb') as file_handle:
         for chunk in iter(lambda: file_handle.read(4096), b''):
@@ -56,6 +62,9 @@ def extract_dataset(dataset_archive_filename: str, dataset_directory: str) -> No
     :param dataset_directory: the name of the directory where the dataset is extracted
     :return: None
     """
+    assert dataset_archive_filename
+    assert dataset_directory
+
     mkdir(dataset_directory)
     tmp_directory = f'{dataset_directory}_tmp'
     with ZipFile(dataset_archive_filename, mode='r') as file_handle:
