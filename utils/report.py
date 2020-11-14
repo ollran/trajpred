@@ -4,13 +4,18 @@
 Report generating functions
 """
 
-from typing import Dict, List
+from itertools import repeat
+from multiprocessing import Pool
+from typing import Dict, List, Tuple, Union
 from numpy import average, median, std, size
 from .bullet import bullet_prediction
 from .dataset import get_list_of_user_ids, get_list_of_users_trajectory_ids, load_users_trajectories_with_target
 from .distance import calculate_trajectory_length_in_meters
 from .error import calculate_error_vector
 from .split import split_trajectory_with_overlap
+
+Params = Dict[str, Union[float, int, str]]
+Report = Dict[str, Union[float, int, str]]
 
 
 def generate_report_for_user(
@@ -20,7 +25,7 @@ def generate_report_for_user(
         threshold: float = 10,
         time: float = 60,
         verbosity: int = 0
-) -> Dict[str, str]:
+) -> Report:
     """
     Runs prediction method for all trajectories of an user and returns a report of the results
     :param user_id: user id
@@ -37,6 +42,9 @@ def generate_report_for_user(
     assert ratio <= 1.0
     assert threshold > 0
     assert time > 0
+
+    if verbosity > 0:
+        print(f'Generating report for user {user_id}')
 
     trajectory_ids = get_list_of_users_trajectory_ids(user_id=user_id)
     failed = 0
@@ -100,13 +108,31 @@ def generate_report_for_user(
     return report
 
 
+def wrapped_generation(args: Tuple[int, Params]) -> Report:
+    """
+    This function wraps the report generation function since in Python, the worker pool cannot serialize local objects
+    before sending them to worker processes.
+    :param args: tuple that contains user id as the first element and parameter dictionary as the second
+    :return: generated report for the user
+    """
+    user, params = args
+    return generate_report_for_user(
+        user_id=user,
+        method=params['method'],
+        ratio=params['ratio'],
+        threshold=params['threshold'],
+        time=params['time'],
+        verbosity=params['verbosity']
+    )
+
+
 def generate_report_for_dataset(
         method: str,
         ratio: float = 0.5,
         threshold: float = 10,
         time: float = 60,
         verbosity: int = 0
-) -> List[Dict[str, str]]:
+) -> List[Report]:
     """
     Generate a list of reports for all users in the dataset
     :param method: prediction method
@@ -117,17 +143,17 @@ def generate_report_for_dataset(
     :return: list of reports
     """
     users = get_list_of_user_ids()
-    reports = []
-    for user in users:
-        if verbosity > 0:
-            print(f'Generating report for user {user}')
-        report = generate_report_for_user(
-            user_id=user,
-            method=method,
-            ratio=ratio,
-            threshold=threshold,
-            time=time,
-            verbosity=verbosity
+    params = {
+        'method': method,
+        'ratio': ratio,
+        'threshold': threshold,
+        'time': time,
+        'verbosity': verbosity,
+    }
+    queue = list(zip(users, repeat(params)))
+
+    with Pool() as pool:
+        return pool.map(
+            wrapped_generation,
+            queue
         )
-        reports.append(report)
-    return reports
