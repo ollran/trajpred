@@ -15,4 +15,4 @@ scipy = "*"
 python_version = "3.8"
 
 [scripts]
-predictor = "python main.py"
+predictor = "python -O main.py"
