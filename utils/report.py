@@ -1,4 +1,4 @@
-# pylint: disable=E0402
+# pylint: disable=E0402, R0913, R0914
 
 """
 Report generating functions
@@ -9,7 +9,8 @@ from multiprocessing import Pool
 from typing import Dict, List, Tuple, Union
 from numpy import average, median, std, size
 from .bullet import bullet_prediction
-from .dataset import get_list_of_user_ids, get_list_of_users_trajectory_ids, load_users_trajectories_with_target
+from .dataset import get_list_of_user_ids, get_list_of_users_trajectory_ids, \
+    load_users_trajectories_with_target
 from .distance import calculate_trajectory_length_in_meters
 from .error import calculate_error_vector
 from .split import split_trajectory_with_overlap
@@ -22,8 +23,8 @@ def generate_report_for_user(
         user_id: int,
         method: str,
         ratio: float = 0.5,
-        threshold: float = 10,
-        time: float = 60,
+        threshold: float = 10.0,
+        time: float = 60.0,
         verbosity: int = 0
 ) -> Report:
     """
@@ -42,6 +43,7 @@ def generate_report_for_user(
     assert ratio <= 1.0
     assert threshold > 0
     assert time > 0
+    assert verbosity >= 0
 
     if verbosity > 0:
         print(f'Generating report for user {user_id}')
@@ -73,8 +75,13 @@ def generate_report_for_user(
                 print(' failed')
             continue
 
-        pred_dist = calculate_trajectory_length_in_meters(trajectory=prediction)
-        if len(prediction) > 0 and size(prediction, 0) > 0 and size(prediction, 1) == 4 and pred_dist > 0:
+        pred_dist = calculate_trajectory_length_in_meters(
+            trajectory=prediction
+        )
+        if len(prediction) > 0 and \
+                size(prediction, 0) > 0 and \
+                size(prediction, 1) == 4 and \
+                pred_dist > 0:
             error_amount = calculate_error_vector(tail, prediction)[:, 4]
             if verbosity > 1:
                 print(' success', pred_dist, len(error_amount), sum(error_amount))
@@ -110,11 +117,16 @@ def generate_report_for_user(
 
 def wrapped_generation(args: Tuple[int, Params]) -> Report:
     """
-    This function wraps the report generation function since in Python, the worker pool cannot serialize local objects
-    before sending them to worker processes.
-    :param args: tuple that contains user id as the first element and parameter dictionary as the second
+    This function wraps the report generation function since in Python, the worker pool
+    cannot serialize local objects before sending them to worker processes.
+    :param args: tuple that contains user id as the first element and parameter dictionary
+    as the second element
     :return: generated report for the user
     """
+    assert args
+    assert args[0]
+    assert args[1]
+
     user, params = args
     return generate_report_for_user(
         user_id=user,
@@ -129,8 +141,8 @@ def wrapped_generation(args: Tuple[int, Params]) -> Report:
 def generate_report_for_dataset(
         method: str,
         ratio: float = 0.5,
-        threshold: float = 10,
-        time: float = 60,
+        threshold: float = 10.0,
+        time: float = 60.0,
         verbosity: int = 0
 ) -> List[Report]:
     """
@@ -142,13 +154,20 @@ def generate_report_for_dataset(
     :param verbosity: verbosity of the generation process
     :return: list of reports
     """
+    assert method
+    assert ratio >= 0.0
+    assert ratio <= 1.0
+    assert threshold > 0
+    assert time > 0
+    assert verbosity >= 0
+
     users = get_list_of_user_ids()
     params = {
         'method': method,
         'ratio': ratio,
         'threshold': threshold,
         'time': time,
-        'verbosity': verbosity,
+        'verbosity': verbosity
     }
     queue = list(zip(users, repeat(params)))
 
