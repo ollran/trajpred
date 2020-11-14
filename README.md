@@ -14,6 +14,7 @@ Jupyter notebooks are used for experimenting, measurements and generating simple
 
 ### Tools
 
+* [Predictor](./tools/predictor/) &mdash; CLI tool for generating predictions and reports
 * [Preprocessor](./tools/preprocessor/) &mdash; Python script that downloads, verifies and extracts the dataset.
 * [Visualizer](./tools/visualizer/) &mdash; Simple tool written in ClojureScript for visualizing trajectories in the browser.
 
