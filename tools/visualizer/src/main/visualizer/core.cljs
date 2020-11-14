@@ -10,7 +10,10 @@
 ;;;;     for mobile-friendly interactive maps.
 
 (ns visualizer.core
-  (:require [clojure.string :as str]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [clojure.string :as str]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]))
 
 (def L
   js/L)
