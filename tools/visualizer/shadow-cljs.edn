@@ -3,7 +3,7 @@
  ["src/main"]
 
  :dependencies
- []
+ [[cljs-http "0.1.46"]]
 
  :dev-http {8080 "public"}
 
