@@ -14,4 +14,4 @@ requests = "*"
 python_version = "3.8"
 
 [scripts]
-preprocessor = "python main.py"
+preprocessor = "python -OO main.py"
