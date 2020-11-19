@@ -9,7 +9,7 @@ from numpy import array, ndarray, row_stack, size
 from numpy.random import choice
 from .distance import calculate_distance_in_meters, calculate_trajectory_length_in_meters
 from .find import find_point_overlapping_trajectories
-from .ranking import rank_by_average_speed_similarity
+from .ranking import rank_by_time_of_day_similarity, rank_by_average_speed_similarity
 from .speed import calculate_speed_in_ms
 from .split import split_trajectories_from_closest_point_inclusively, split_trajectory_by_distance
 
@@ -173,6 +173,77 @@ def predict_by_picking_tail_with_similar_speed(
         return base_case
 
     ranked = rank_by_average_speed_similarity(
+        trajectory=trajectory,
+        tails=filtered_tails
+    )
+    if len(ranked) == 0:
+        return base_case
+    target = ranked[0]
+
+    speed = calculate_speed_in_ms(
+        start=start,
+        end=end
+    )
+    distance_to_predict = time * speed
+    if distance_to_predict <= 0:
+        return base_case
+    if size(target, 0) == 1:
+        return target
+
+    prediction, rest = split_trajectory_by_distance(
+        trajectory=target,
+        distance=distance_to_predict
+    )
+    predicted_distance = calculate_trajectory_length_in_meters(
+        trajectory=prediction
+    )
+    remaining_distance_to_predict = distance_to_predict - predicted_distance
+    if remaining_distance_to_predict > 0 and size(rest, 0) > 0 and size(rest, 1) == 4:
+        remaining_point = generate_point_from_between_by_distance(
+            start=prediction[-1],
+            end=rest[0],
+            distance=remaining_distance_to_predict
+        )
+        return row_stack((prediction, remaining_point))
+    return prediction
+
+
+def predict_by_picking_tail_with_similar_time_of_day(
+        dataset_trajectories: List[ndarray],
+        trajectory: ndarray,
+        time: float,
+        threshold: float = 10
+) -> ndarray:
+    """
+    Predict by ranking tails in the dataset and picking the one with most similar time of day
+    :param dataset_trajectories: trajectory history
+    :param trajectory: target trajectory
+    :param time: time in seconds
+    :param threshold: threshold in meters
+    :return: prediction
+    """
+    assert len(dataset_trajectories) > 0
+    assert size(trajectory, 0) >= 2
+    assert size(trajectory, 1) == 4
+    assert time > 0
+    assert threshold > 0
+
+    base_case = array([[]])
+    start, end = trajectory[-2], trajectory[-1]
+    tails = construct_potential_tails(
+        dataset_trajectories=dataset_trajectories,
+        target_point=end,
+        threshold=threshold
+    )
+    # Filter short tails from predictions
+    filtered_tails = list(filter(
+        lambda tail: len(tail) >= 2,
+        tails
+    ))
+    if len(filtered_tails) == 0:
+        return base_case
+
+    ranked = rank_by_time_of_day_similarity(
         trajectory=trajectory,
         tails=filtered_tails
     )
