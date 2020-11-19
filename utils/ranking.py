@@ -62,7 +62,6 @@ def rank_by_time_of_day_similarity(
     assert len(tails) > 0
 
     trajectory_start_coordinate = trajectory[0]
-    print(trajectory_start_coordinate)
     tails_with_start_coordinate = list(map(
         lambda tail: (tail[0], tail),
         tails
