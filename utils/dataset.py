@@ -3,7 +3,7 @@ Dataset related functions
 """
 
 from itertools import chain
-from os import fwalk, scandir
+from os import fwalk, scandir, walk
 from typing import List, Tuple
 from numpy import loadtxt, ndarray
 
@@ -70,8 +70,31 @@ def load_all_trajectories() -> List[ndarray]:
     """
     return list(chain(*[
         [loadtxt(f'{dirpath}/{f}') for f in filenames]
-        for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}')
+        for dirpath, _, filenames in walk(f'{DATASET_DIRECTORY}')
     ]))
+
+
+def load_all_trajectories_with_target(
+        user_id: int,
+        trajectory_id: int
+) -> Tuple[ndarray, List[ndarray]]:
+    """
+    Loads target trajectory and the rest of trajectories and returns them as a tuple
+    :param user_id:
+    :param trajectory_id:
+    :return:
+    """
+    assert user_id > 0
+    assert trajectory_id > 0
+
+    return (
+        loadtxt(f'{DATASET_DIRECTORY}/{user_id}/{trajectory_id}'),  # target trajectory
+        list(chain(*[
+            [loadtxt(f'{dirpath}/{f}')
+             for f in filenames if f != f'{trajectory_id}']  # omit the target trajectory
+            for dirpath, _, filenames in walk(f'{DATASET_DIRECTORY}')
+        ]))
+    )
 
 
 def get_list_of_users_trajectory_ids(user_id: int) -> List[int]:
@@ -85,6 +108,17 @@ def get_list_of_users_trajectory_ids(user_id: int) -> List[int]:
     return list(chain(*[
         [int(f) for f in filenames]
         for dirpath, _, filenames, _ in fwalk(f'{DATASET_DIRECTORY}/{user_id}')
+    ]))
+
+
+def get_list_of_all_trajectory_ids() -> List[int]:
+    """
+    Get list of all trajectory ids
+    :return: list of trajectory ids
+    """
+    return list(chain(*[
+        [int(f) for f in filenames]
+        for _, _, filenames in walk(f'{DATASET_DIRECTORY}')
     ]))
 
 
