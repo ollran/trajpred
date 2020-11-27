@@ -45,9 +45,6 @@ def generate_report_for_user(
     assert time > 0
     assert verbosity >= 0
 
-    if verbosity > 0:
-        print(f'Generating report for user {user_id}')
-
     trajectory_ids = get_list_of_users_trajectory_ids(user_id=user_id)
     failed = 0
     errors = []
