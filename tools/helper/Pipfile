@@ -8,6 +8,10 @@ mypy = "*"
 pylint = "*"
 
 [packages]
+numpy = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+helper = "python -OO main.py"
