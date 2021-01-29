@@ -88,6 +88,7 @@ def generate_report_for_user(
             if verbosity > 1:
                 print(' failed')
 
+    prediction_success_rate = (len(trajectory_ids) - failed) / len(trajectory_ids)
     errors_sum = list(map(sum, errors))
     report = {
         'user_id': user_id,
@@ -96,6 +97,7 @@ def generate_report_for_user(
         'threshold': threshold,
         'time': time,
         'failed predictions': failed,
+        'prediction success rate': prediction_success_rate,
         'error average': average(errors_sum),
         'error median': median(errors_sum),
         'error standard deviation': std(errors_sum)
@@ -106,7 +108,8 @@ def generate_report_for_user(
             '\naverage\t\t\t', report['error average'],
             '\nmedian\t\t\t', report['error median'],
             '\nstandard deviation\t', report['error standard deviation'],
-            '\nfailed predictions\t', report['failed predictions']
+            '\nfailed predictions\t', report['failed predictions'],
+            '\nprediction success rate\t', report['prediction success rate'],
         )
 
     return report
